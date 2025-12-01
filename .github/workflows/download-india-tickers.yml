@@ -27,13 +27,20 @@ jobs:
 
       # Run update script
       - name: Update Tickers
-        run: python scripts/update_tickers.py
+        run: |
+          python scripts/update_tickers.py
+          ls -R data/ || echo "Data directory not found"
 
       # ===================== COMMIT AND PUSH =====================
       - name: commit-new-files
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
-          git add -f data/
-          git diff --cached --quiet || git commit -m "Update India tickers"
-          git push
+          if [ -d "data" ]; then
+            git add -f data/
+            git diff --cached --quiet || git commit -m "Update India tickers"
+            git push
+          else
+            echo "No data directory to commit"
+            exit 1
+          fi

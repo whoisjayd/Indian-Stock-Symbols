@@ -4,6 +4,7 @@ import json
 import time
 import requests
 import logging
+import sys
 from pathlib import Path
 from io import StringIO
 from typing import List, Dict, Any
@@ -11,7 +12,8 @@ from typing import List, Dict, Any
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s'
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    stream=sys.stdout
 )
 logger = logging.getLogger(__name__)
 
@@ -135,11 +137,16 @@ def process_data(csv_text: str) -> List[str]:
 
 
 def main():
+    print("Script starting...", flush=True)
     try:
         session = get_session()
 
         logger.info("Downloading Scrip Master...")
         csv_text = download_csv(session, IIFL_URL)
+
+        if not csv_text:
+            logger.error("Downloaded CSV is empty")
+            exit(1)
 
         all_india_tickers = process_data(csv_text)
 
