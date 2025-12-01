@@ -1,0 +1,39 @@
+name: Download Latest India Stocks
+
+on:
+  schedule:
+    - cron: "0 0 * * *" # daily at 00:00 UTC
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout repo
+      - uses: actions/checkout@v4
+
+      # Setup Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      # Run update script
+      - name: Update Tickers
+        run: python scripts/update_tickers.py
+
+      # ===================== COMMIT AND PUSH =====================
+      - name: commit-new-files
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add -f data/
+          git diff --cached --quiet || git commit -m "Update India tickers"
+          git push

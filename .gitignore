@@ -1,0 +1,15 @@
+# OS / editor junk
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Node / Python / build artifacts (if you add tooling later)
+node_modules/
+dist/
+build/
+__pycache__/
+*.pyc
+
+# Generated ticker files
+data/
