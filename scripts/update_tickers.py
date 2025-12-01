@@ -97,6 +97,10 @@ def process_data(csv_text: str) -> List[str]:
 
     all_india_tickers = []
 
+    # Ensure data directory exists
+    data_dir = BASE_DIR / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+
     for config in CONFIG:
         logger.info(f"Processing {config['key']}...")
 
